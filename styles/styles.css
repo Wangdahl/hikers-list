@@ -43,7 +43,7 @@ a {
     width: 100%;
 }
 .nav-ul {
-    background-color: var(--secondary-bg-color);
+    background-color: transparent;
     display: flex;
     flex-direction: row;
     list-style: none;

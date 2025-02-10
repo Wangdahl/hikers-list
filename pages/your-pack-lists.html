@@ -6,6 +6,7 @@
     <title>Hikers Pack List</title>
 
     <link rel="stylesheet" href="../styles/styles.css">
+    <link rel="stylesheet" href="../styles/pack-lists.css"> <!--Pack list specific styling-->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 </head>
 <body>
@@ -13,20 +14,22 @@
 
     </header>
     <main>
-        <div>
-            <h1>Your pack list</h1>
-        </div>
-        <div class="content-box">
-            <div class="input-container">
-                <input id="newItem" type="text" placeholder="Add your gear">
-                <button id="addItemBtn" onclick="addItem()"><i class="fa-solid fa-plus"></i></button>
+        <section id="your-list-container">
+            <div>
+                <h1>Your pack list</h1>
             </div>
-            <div class="list-container">
-                <ul id="user-pack-list">
-
-                </ul>
+            <div class="content-box">
+                <div class="input-container">
+                    <input id="newItem" type="text" placeholder="Add your gear..">
+                    <button id="addItemBtn" onclick="addItem()"><i class="fa-solid fa-plus"></i></button>
+                </div>
+                <div class="list-container">
+                    <ul id="user-pack-list">
+    
+                    </ul>
+                </div>
             </div>
-        </div>
+        </section>
     </main>
     <footer>
         <nav class="main-nav" id="mobile-nav">
