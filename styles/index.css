@@ -1,0 +1,66 @@
+/* Styling for index.html, the front page */
+
+#index-main-sectioon {
+    height: calc(100vh - 4rem);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#background-vid-box {
+    position: absolute;
+    top: 0;
+    left:0;
+    height: 100vh;
+    width: 100%;
+    overflow: hidden;
+    z-index: 0;
+}
+.background-video {
+    max-height: 100%;
+    object-fit: cover;
+}
+
+#banner-content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+    z-index: 1;
+    color: var(--text-color);
+    text-align: center;
+    background-color: var(--dark-overlay);
+    width: 100%;
+    height: 100%;
+    padding: 2rem;
+}
+#front-page-h1 {
+margin: 0 0 3.5rem;
+}
+
+.frontPageBtn {
+    color: var(--text-color);
+    border: thin solid var(--text-color);
+    border-radius: 5px;
+    padding: 10px;
+    width: 250px;
+    align-self: center;
+    margin: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    font-size: 1.1rem;
+}
+.frontPageBtn i {
+    font-size: inherit;
+}
+
+.nav-ul {
+    background-color: transparent;
+}
+.aNav i {
+    color: var(--text-color);
+}
