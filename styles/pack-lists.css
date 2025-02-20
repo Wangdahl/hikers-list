@@ -22,7 +22,7 @@
 }
 #newItem::placeholder {
     color: var(--text-color);
-    
+
 }
 #addItemBtn {
     padding: 0;
@@ -30,6 +30,7 @@
     background-color: transparent;
     border: none;
     color: var(--text-color);
+    cursor: pointer;
 }
 
 /* Styling list and list item */
@@ -43,8 +44,12 @@
     width: 100%;
     display: flex;
     padding: 5px 0;
-    margin: 8px 0 5px;
+    margin: 5px 0 3px;
     border-bottom: thin solid var(--text-color);
+}
+.item span {
+    width: 100%;
+    cursor: pointer;
 }
 
 .item button {
@@ -52,5 +57,14 @@
     color: var(--text-color);
     background-color: transparent;
     border: none;
-    font-size: 1rem;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+.item button .fa-plus {
+    transform: rotate(45deg);
+}
+
+.done {
+    text-decoration: line-through;
+    color: var(--secondary-color);
 }
