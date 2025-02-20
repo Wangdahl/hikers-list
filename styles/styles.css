@@ -12,7 +12,7 @@
     --black-color: rgba(1, 4, 2, 1);
     --text-color: rgba(253, 253, 253, 1);
     --secondary-bg-color: rgba(243, 246, 244, 1);
-    --dark-overlay: rgba(1, 4, 2, 0.2);
+    --dark-overlay: rgba(1, 4, 2, 0.3);
     --bright-overlay: rgba(243, 246, 244, 0.2);
 }
 
@@ -23,13 +23,15 @@ html {
 body {
     min-height: 100vh;
     color: var(--text-color);
-    background-color: var(--primary-color);
+    background-color: var(--dark-overlay);
     font-family: 'Noto Sans', Helvetica, Arial, sans-serif;
 }
 
+
+
 /* Element styling */
 h1 {
-    font-size: 2.4rem;
+    font-size: 1.5rem;
 }
 a {
     text-decoration: none;
@@ -37,13 +39,12 @@ a {
 }
 
 /* Navigation styles */
-#mobile-nav {
+#mobile-nav.main-nav {
     position: fixed;
     bottom: 0;
     width: 100%;
 }
 .nav-ul {
-    background-color: transparent;
     display: flex;
     flex-direction: row;
     list-style: none;
@@ -55,4 +56,22 @@ a {
 
 .aNav i {
     font-size: 2rem;
+}
+
+
+/* Background videos */
+
+.background-vid-box {
+    position: fixed;
+    top: 0;
+    left:0;
+    height: 100vh;
+    width: 100%;
+    overflow: hidden;
+    z-index: -1;
+}
+.background-video {
+    max-height: 100%;
+    object-fit: cover;
+    height: 100vh;
 }
