@@ -43,6 +43,7 @@ a {
     position: fixed;
     bottom: 0;
     width: 100%;
+    background: linear-gradient(180deg, rgba(1, 4, 2, 0), rgba(1, 4, 2, 1)) !important;
 }
 .nav-ul {
     display: flex;

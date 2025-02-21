@@ -84,9 +84,10 @@ const itemsArray = localStorage.getItem('items') ? JSON.parse(localStorage.getIt
 const modifiedMultiDayList = localStorage.getItem('modifiedMultiDayList') ? JSON.parse(localStorage.getItem('modifiedMultiDayList')) : null;
 const modifiedSingleDayList = localStorage.getItem('modifiedSingleDayList') ? JSON.parse(localStorage.getItem('modifiedSingleDayList')) : null;
 
-// Global variables to track the currently active list and its storage key
+// Global variables to track the currently active list and its storage key + the last active list
 let currentList = itemsArray;       // Initially, the custom list is active.
 let currentStorageKey = 'items';
+const LAST_ACTIVE_LIST_KEY = 'lastActiveList';
 
 //Helper function to save list items in local storage
 const saveItems = (list, key) => {
@@ -95,16 +96,36 @@ const saveItems = (list, key) => {
 
 //Helper function to remove items from array and update local storage
 const removeItemFromArray = (list, itemText, key) => {
+    //Checking active list and switching if its a default list
+    
     //Find the index of the item to remove
     const index = list.indexOf(itemText);
     if(index !== -1) {
-        list.splice(index, 1);
+        if (currentStorageKey === 'multiOriginal' || currentStorageKey === 'singleOriginal') {
+            const newStorageKey = currentStorageKey === 'multiOriginal' ? 'modifiedMultiDayList' : 'modifiedSingleDayList';
+            const originalList = currentStorageKey === 'multiOriginal' ? multiDayList : singleDayList;
+            
+            currentList = [...originalList];
+            currentList.splice(index, 1);
+            saveItems(currentList, newStorageKey);
+            
+                
+            // Update storage key and title
+            currentStorageKey = newStorageKey;
+            packListTitle.innerHTML = currentStorageKey === 'modifiedMultiDayList' 
+                ? 'Din flerdagslista <i class="fas fa-chevron-down"></i>'
+                : 'Din dagsturslista <i class="fas fa-chevron-down"></i>';
+            saveLastActiveList();
+            // Update the dropdown to show the modified list option
+            updateDropdown(currentStorageKey);
+        } else {
+            list.splice(index, 1);
+            saveItems(list, key);
+        }
     }
-    saveItems(list, key);
 }
 
 //Helper function to load a list into the UI
-//Clears the users pack list
 const loadList = (list, storageKey) => {
     packList.innerHTML = '';
     list.forEach(itemText => {
@@ -139,6 +160,14 @@ const createListElement = (itemText, listRef, storageKey) => {
     li.appendChild(span);
     li.appendChild(removeBtn);
     packList.appendChild(li);
+}
+// Helper function to save the last active list
+const saveLastActiveList = () => {
+    const lastActive = {
+        storageKey: currentStorageKey,
+        title: packListTitle.innerHTML
+    };
+    localStorage.setItem(LAST_ACTIVE_LIST_KEY, JSON.stringify(lastActive));
 }
 
 //Toggle dropdown visibility
@@ -181,88 +210,100 @@ const updateDropdown = (storageKey) => {
     } else {
         packListOptions.appendChild(li);
     }
+
     //Putting new list at the bottom
     let newOption = packListOptions.querySelector('li[data-value="new"]');
     if(newOption) {
         packListOptions.appendChild(newOption);
     }
+
     //Add event listener to load list
     li.addEventListener('click', () => {
+        currentList = JSON.parse(localStorage.getItem(storageKey));
+        currentStorageKey = storageKey;
         packListTitle.innerHTML = li.textContent + ' <i class="fas fa-chevron-down"></i>';
         packListOptions.style.display = 'none';
-        
-        //Hide input for default list
         document.querySelector('.input-container').style.display = 'flex';
-        loadList(JSON.parse(localStorage.getItem(storageKey)), storageKey);
-            // Update currentList/global if desired:
-            currentList = JSON.parse(localStorage.getItem(storageKey));
-            currentStorageKey = storageKey;
+        loadList(currentList, currentStorageKey);
+        saveLastActiveList();
     });
-
-    //Auto-update the dropdown list visible selection
-    packListTitle.innerHTML = li.textContent + ' <i class="fas fa-chevron-down"></i>';
 }
 
 //Attach event listeners to static dropdown
 packListOptions.querySelectorAll('li').forEach(item => {
     item.addEventListener('click', () => {
         const selectedValue = item.getAttribute('data-value');
-        //uppdate dropdown list
         packListTitle.innerHTML = item.textContent + ' <i class="fas fa-chevron-down"></i>';
-        //hide dropdown menu
         packListOptions.style.display = 'none';
 
         if (selectedValue === 'custom') {
             currentList = itemsArray;
             currentStorageKey = 'items';
-            loadList(itemsArray, 'items');
+            loadList(currentList, currentStorageKey);
         } else if (selectedValue === 'new') {
-            // Clear the custom list (reset it)
             itemsArray.length = 0;
             saveItems(itemsArray, 'items');
             currentList = itemsArray;
             currentStorageKey = 'items';
-            loadList(itemsArray, 'items');
+            loadList(currentList, currentStorageKey);
         } else if (selectedValue === 'multiOriginal') {
-            // Load the original multi-day list; modifications will be saved under 'modifiedMultiDayList'
-            currentStorageKey = 'modifiedMultiDayList';
-            if (localStorage.getItem('modifiedMultiDayList')) {
-                currentList = JSON.parse(localStorage.getItem('modifiedMultiDayList'));
-            } else {
-                currentList = multiDayList.slice(); // Make a copy so that the original isn’t changed.
-            }
+            // Set globals to the original default (which will become modified when edited)
+            currentStorageKey = 'multiOriginal';
+            currentList = multiDayList.slice();
+            loadList(currentList, currentStorageKey);
         } else if (selectedValue === 'singleOriginal') {
-            currentStorageKey = 'modifiedSingleDayList';
-            if (localStorage.getItem('modifiedSingleDayList')) {
-                currentList = JSON.parse(localStorage.getItem('modifiedSingleDayList'));
-            } else {
-                currentList = singleDayList.slice();
-            }
+            currentStorageKey = 'singleOriginal';
+            currentList = singleDayList.slice();
             loadList(currentList, currentStorageKey);
         }
+        // Save the last active list information so it can be restored later.
+        saveLastActiveList();
     });
 });
+
 //Main function for adding items- Triggered by pressing the button
 const addItem = () => {
-    // Getting text from input box
     const itemText = itemInput.value.trim();
-    //Ensuring input is not empty
-    if(itemText === '') { 
+    if (itemText === '') {
         return;
     }
-    //Adding item to array for local storage
-    currentList.push(itemText);
-    //Adding item to the active list
-    createListElement(itemText, currentList, currentStorageKey);
-    //Save items to local storage
-    saveItems(currentList, currentStorageKey);
-    // Clears input field
-    itemInput.value='';
 
-    // If new list has been selected switch it over to your list once item added
-    if (currentStorageKey === 'items' && currentList.length === 1) {
+    // Check if we're trying to add to an original list and switch to modified version
+    if (currentStorageKey === 'multiOriginal' || currentStorageKey === 'singleOriginal') {
+        const newStorageKey = currentStorageKey === 'multiOriginal' ? 'modifiedMultiDayList' : 'modifiedSingleDayList';
+        const originalList = currentStorageKey === 'multiOriginal' ? multiDayList : singleDayList;
+        
+        // Create a new modified list from the original if it doesn't exist
+        if (!localStorage.getItem(newStorageKey)) {
+            currentList = [...originalList];
+            saveItems(currentList, newStorageKey);
+        } else {
+            currentList = JSON.parse(localStorage.getItem(newStorageKey));
+        }
+            
+        // Update storage key and title
+        currentStorageKey = newStorageKey;
+        packListTitle.innerHTML = currentStorageKey === 'modifiedMultiDayList' 
+            ? 'Din flerdagslista <i class="fas fa-chevron-down"></i>'
+            : 'Din dagsturslista <i class="fas fa-chevron-down"></i>';
+        saveLastActiveList();
+        // Update the dropdown to show the modified list option
+        updateDropdown(currentStorageKey);
+    } else if (currentStorageKey === 'new') {
+        // Switch to custom list when adding item to new list
+        currentList = itemsArray;
+        currentStorageKey = 'items';
         packListTitle.innerHTML = 'Din packlista <i class="fas fa-chevron-down"></i>';
     }
+
+    // Adding item to array for local storage
+    currentList.push(itemText);
+    // Adding item to the active list
+    createListElement(itemText, currentList, currentStorageKey);
+    // Save items to local storage
+    saveItems(currentList, currentStorageKey);
+    // Clears input field
+    itemInput.value = '';
 }
 
 itemInput.addEventListener('keydown', event => {
@@ -273,10 +314,38 @@ itemInput.addEventListener('keydown', event => {
 })
 
 window.addEventListener('load', () => {
-    // Set default active list to custom packlist
+    // Set default state first
     currentList = itemsArray;
     currentStorageKey = 'items';
     packListTitle.innerHTML = 'Din packlista <i class="fas fa-chevron-down"></i>';
+    //Check for last active list
+    const lastActive = localStorage.getItem(LAST_ACTIVE_LIST_KEY);
+    if (lastActive) {
+        const {storageKey, title} = JSON.parse(lastActive);
+        currentStorageKey = storageKey;
+        packListTitle.innerHTML = title;
+
+        //load the right list 
+        if(storageKey === 'items') {
+            currentList = itemsArray;
+        } else if (storageKey === 'multiOriginal') {
+            currentList = multiDayList;
+            currentList = [...multiDayList];
+        } else if (storageKey === 'singleOriginal') {
+            currentList = singleDayList;
+            currentList = [...singleDayList];
+        } else {
+            currentList = localStorage.getItem(storageKey) 
+                ? JSON.parse(localStorage.getItem(storageKey)) 
+                : itemsArray;
+            }
+        } else {
+            currentList = itemsArray;
+            currentStorageKey = 'items';
+            packListTitle.innerHTML = 'Din packlista <i class="fas fa-chevron-down"></i>';
+        }
+    // Set default active list to custom packlist
+
     loadList(currentList, currentStorageKey);
 
     // If modified versions exist, add them to the dropdown.

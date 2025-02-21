@@ -22,8 +22,8 @@
     height: 100vh;
     padding: 2rem;
 }
-#mobile-nav {
-    background-color: var(--dark-overlay);
+#mobile-nav.main-nav {
+    background-color: var(--dark-overlay) !important;
 }
 #front-page-h1 {
 margin: 0 0 2.5rem;

@@ -1,4 +1,4 @@
-/* Styling for pack list pages */
+/* Styling for pack list page */
 
 main {
     width: 100%;
@@ -80,4 +80,9 @@ h1 {
 .done {
     text-decoration: line-through;
     color: var(--secondary-color);
+}
+
+/* Styling the dropdown */
+#packListOptions {
+    display: none;
 }
