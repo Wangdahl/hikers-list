@@ -123,3 +123,8 @@ i.open {
 nav {
     background: linear-gradient(180deg, rgba(1, 4, 2, 0), rgba(1, 4, 2, 1));
 }
+@media (min-width: 786px) {
+    nav {
+        background: transparent;
+    }
+}
