@@ -13,6 +13,7 @@
     --text-color: rgba(253, 253, 253, 1);
     --secondary-bg-color: rgba(243, 246, 244, 1);
     --dark-overlay: rgba(1, 4, 2, 0.3);
+    --darker-overlay: rgba(1, 4, 2, 0.4);
     --bright-overlay: rgba(243, 246, 244, 0.2);
 }
 
@@ -39,11 +40,15 @@ a {
 }
 
 /* Navigation styles */
+footer {
+    display: flex;
+    justify-content: center;
+}
 #mobile-nav.main-nav {
     position: fixed;
     bottom: 0;
     width: 100%;
-    background: linear-gradient(180deg, rgba(1, 4, 2, 0), rgba(1, 4, 2, 1)) !important;
+    max-width: 768px;
 }
 .nav-ul {
     display: flex;
@@ -53,26 +58,74 @@ a {
     margin-top: auto;
     padding: 1rem;
 }
-
-
 .aNav i {
     font-size: 2rem;
 }
 
-
-/* Background videos */
-
-.background-vid-box {
-    position: fixed;
-    top: 0;
-    left:0;
-    height: 100vh;
-    width: 100%;
-    overflow: hidden;
-    z-index: -1;
+/* Adapting menu for bigger screens */
+@media (min-width: 786px) {
+    #mobile-nav {
+        display: none;
+    }
 }
-.background-video {
-    max-height: 100%;
-    object-fit: cover;
+
+/* Sky background */
+.landscape {
+    position: fixed;
+    width: 100%;
     height: 100vh;
+    background: linear-gradient(to top, var(--secondary-bg-color), var(--secondary-color));
+    z-index: -1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/*  mountain styling */
+.mountain-wrapper {
+    position: absolute;
+    bottom: 0;
+    width: 600px;
+    height: 50%;
+    z-index: inherit;
+}
+
+.mountain {
+    position: absolute;
+    bottom: 0;
+    height: 100%;    
+}
+.mountain-back {
+    background: linear-gradient(135deg, rgb(163, 197, 180), var(--secondary-color));
+    clip-path: polygon(0% 100%, 25% 55%, 30% 60%, 45% 37%, 60% 48%, 75% 55%, 90% 75%, 100% 100%, 100% 100%, 0% 100%);
+    z-index: 1;
+    width: 500px;
+    right: 50px
+}
+.mountain-middle {
+    background: linear-gradient(135deg, rgb(35, 70, 52), var(--primary-color));
+    clip-path: polygon(0% 100%, 20% 75%, 35% 70%, 50% 55%, 65% 60%, 75% 50%, 100% 100%, 100% 100%, 0% 100%);
+    z-index: 2;
+    width: 450px;
+}
+.mountain-front {
+    background: var(--black-color);
+    clip-path: polygon(0% 100%, 25% 85%, 40% 75%, 55% 68%, 65% 75%, 85% 85%, 100% 100%, 100% 100%, 0% 100%);
+    z-index: 3;
+    width: 400px;
+    right: 0;
+}
+.mountain-wrapper:nth-child(1) {
+    filter: drop-shadow(0 0 10px var(--secondary-color));
+    z-index: 1;
+}
+
+.mountain-wrapper:nth-child(2) {
+    filter: drop-shadow(0 0 10px var(--primary-color));
+    z-index: 2;
+}
+
+.mountain-wrapper:nth-child(3) {
+    filter: drop-shadow(0 0 20px var(--black-color));
+    z-index: 3;
 }
