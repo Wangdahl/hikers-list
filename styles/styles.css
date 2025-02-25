@@ -73,15 +73,16 @@ footer {
     #big-nav {
         display: block;
         margin: 0 auto;
+        z-index: 5;
         width: 100%;
         background-color: transparent;
         position: fixed;
         display: flex;
-        justify-content: flex-end;
+        justify-content: center;
     }
     #big-nav .nav-ul {
         padding: 1.5rem 4rem;
-        gap: 2rem;
+        gap: 4rem;
         font-size: 0.7rem;
         font-weight: bold;
         text-transform: uppercase;
